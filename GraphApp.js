@@ -1,4 +1,4 @@
-// App.js
+// GraphApp.js
 
 import React from 'react';
 import { ReactFlowProvider } from 'reactflow';
