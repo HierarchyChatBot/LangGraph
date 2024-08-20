@@ -7,7 +7,7 @@ import Node, { addNode, deleteNode } from './Node';
 import { createEdge, deleteEdge } from './Edge';
 import { createConditionEdge, deleteConditionEdge } from './ConditionEdge';
 import { saveJson, loadJson } from './JsonUtils';
-import { useGraphManager, GraphManagerProvider } from './GraphManagerContext';
+import { useGraphManager } from './GraphManagerContext';
 import ConfigWindow from './ConfigWindow';
 import RunWindow from './RunWindow';
 import FileTransmit from './FileTransmit';
@@ -165,12 +165,12 @@ function Canvas() {
   return (
     <div style={{ height: '100vh', width: '100%' }}>
       <nav ref={menuBarRef} style={{ padding: '10px', borderBottom: '1px solid #ccc', marginBottom: '10px' }}>
+        <button onClick={handleChatBot}>ChatBot</button> {/* Add ChatBot button */}
         <button onClick={handleNew}>New Graph</button>
         <button onClick={handleSave}>Save Graph</button>
         <button onClick={handleLoad}>Load Graph</button>
         <button onClick={handleRun}>Run Graph</button>
         <FileTransmit onUploadComplete={handleUploadComplete} />
-        <button onClick={handleChatBot}>ChatBot</button> {/* Add ChatBot button */}
       </nav>
       <div style={{ height: `${canvasHeight}px`, width: '100%' }}>
         <ReactFlow 
@@ -220,8 +220,4 @@ function Canvas() {
   );
 }
 
-export default () => (
-  <GraphManagerProvider>
-    <Canvas />
-  </GraphManagerProvider>
-);
+export default Canvas;
