@@ -71,8 +71,8 @@ function FileTransmit({ onUploadComplete }) {
         onChange={handleFileChange}
         multiple // Allow multiple file selection
       />
-      <button onClick={handleUploadClick}>Upload</button>
-      <button onClick={handleDownloadClick}>Download</button>
+      <button onClick={handleUploadClick}>Files To Cache</button>
+      <button onClick={handleDownloadClick}>Get from Cache</button>
     </div>
   );
 }

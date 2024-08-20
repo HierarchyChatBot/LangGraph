@@ -12,6 +12,8 @@ import ConfigWindow from './ConfigWindow';
 import RunWindow from './RunWindow';
 import FileTransmit from './FileTransmit';
 
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
 const nodeTypes = { textUpdater: Node };
 
 function Canvas() {
@@ -30,6 +32,8 @@ function Canvas() {
   const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
   const [showConfig, setShowConfig] = useState(false);
   const [showRun, setShowRun] = useState(false);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const handleResize = () => {
@@ -154,15 +158,19 @@ function Canvas() {
     console.log('Upload complete.');
   };
 
+  const handleChatBot = () => {
+    navigate('/'); // Navigate to /chat path
+  };
+
   return (
     <div style={{ height: '100vh', width: '100%' }}>
       <nav ref={menuBarRef} style={{ padding: '10px', borderBottom: '1px solid #ccc', marginBottom: '10px' }}>
-        <button onClick={handleNew}>New</button>
-        <button onClick={handleSave}>Save</button>
-        <button onClick={handleLoad}>Load</button>
-        <button onClick={handleRun}>Run</button>
-        <button onClick={handleConfig}>Config</button>
+        <button onClick={handleNew}>New Graph</button>
+        <button onClick={handleSave}>Save Graph</button>
+        <button onClick={handleLoad}>Load Graph</button>
+        <button onClick={handleRun}>Run Graph</button>
         <FileTransmit onUploadComplete={handleUploadComplete} />
+        <button onClick={handleChatBot}>ChatBot</button> {/* Add ChatBot button */}
       </nav>
       <div style={{ height: `${canvasHeight}px`, width: '100%' }}>
         <ReactFlow 
