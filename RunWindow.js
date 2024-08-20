@@ -1,6 +1,7 @@
 // RunWindow.js
 
 import React, { useState, useEffect } from 'react';
+import SERVER_URL from './config';
 
 function RunWindow({ onClose }) {
   const [responseMessage, setResponseMessage] = useState('');
@@ -13,7 +14,7 @@ function RunWindow({ onClose }) {
 
     try {
       console.log("Attempting to send request to Flask server...");
-      const response = await fetch('http://127.0.0.1:5000/run', {
+      const response = await fetch(`${SERVER_URL}/run`, {
         method: 'POST',
       });
 
@@ -47,7 +48,7 @@ function RunWindow({ onClose }) {
     if (!running) return;
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/stop', {
+      const response = await fetch(`${SERVER_URL}/stop`, {
         method: 'POST',
       });
       const message = await response.text();
@@ -68,7 +69,7 @@ function RunWindow({ onClose }) {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/status', {
+        const response = await fetch(`${SERVER_URL}/status`, {
           method: 'GET',
         });
         const status = await response.json();

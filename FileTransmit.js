@@ -1,6 +1,7 @@
 // FileTransmit.js
 
 import React, { useRef } from 'react';
+import SERVER_URL from './config';
 
 function FileTransmit({ onUploadComplete }) {
   const fileInputRef = useRef();
@@ -18,7 +19,7 @@ function FileTransmit({ onUploadComplete }) {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/upload', {
+        const response = await fetch(`${SERVER_URL}/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -43,7 +44,7 @@ function FileTransmit({ onUploadComplete }) {
 
   const handleDownloadClick = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/download`);
+      const response = await fetch(`${SERVER_URL}/download`);
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
