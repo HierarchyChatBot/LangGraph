@@ -1,13 +1,13 @@
 // Canvas.js
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import ReactFlow, { MiniMap, Controls, Background, useEdgesState, useReactFlow } from 'reactflow';
+import ReactFlow, { MiniMap, Controls, Background, useReactFlow } from 'reactflow';
 import 'reactflow/dist/style.css';
 import Node, { addNode, deleteNode } from './Node';
 import { createEdge, deleteEdge } from './Edge';
 import { createConditionEdge, deleteConditionEdge } from './ConditionEdge';
 import { saveJson, loadJson } from './JsonUtils';
-import { useGraphManager } from './GraphManagerContext';
+import { useGraphManager } from './GraphManager';
 import ConfigWindow from './ConfigWindow';
 import RunWindow from './RunWindow';
 import FileTransmit from './FileTransmit';
@@ -21,11 +21,13 @@ function Canvas() {
     nodes,
     setNodes,
     onNodesChange,
+    edges,
+    setEdges,
+    onEdgesChange,
     nodeIdCounter,
     setNodeIdCounter,
   } = useGraphManager();
 
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [contextMenu, setContextMenu] = useState(null);
   const { screenToFlowPosition } = useReactFlow();
   const menuBarRef = useRef(null);

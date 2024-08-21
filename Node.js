@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useState, useEffect } from 'react';
 import NodeLayout from './NodeLayout';
-import { useGraphManager } from './GraphManagerContext';
+import { useGraphManager } from './GraphManager';
 
 // Helper functions to remove references
 export const removePrevs = (nodes, nodeId) => {
