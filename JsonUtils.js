@@ -36,7 +36,7 @@ export const saveJson = async (nodes, nodeIdCounter) => {
   }
 };
 
-export const loadJson = async (setEdges, setNodes, setNodeIdCounter) => {
+export const readJsonFile = async () => {
   try {
     const [fileHandle] = await window.showOpenFilePicker({
       types: [
@@ -50,8 +50,18 @@ export const loadJson = async (setEdges, setNodes, setNodeIdCounter) => {
 
     const file = await fileHandle.getFile();
     const contents = await file.text();
-    const flowData = JSON.parse(contents);
+    return JSON.parse(contents);
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      console.error('Error reading JSON file:', error);
+      alert('Failed to read JSON file.');
+    }
+  }
+};
 
+// Function to process the JSON data and update the application state
+export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) => {
+  try {
     const loadedNodes = (flowData.nodes || []).map((nodeData) => NodeData.fromDict(nodeData).toReactFlowNode());
 
     // First, set the nodes
@@ -84,6 +94,19 @@ export const loadJson = async (setEdges, setNodes, setNodeIdCounter) => {
 
     // Set node counter
     setNodeIdCounter(flowData.node_counter || 1);
+  } catch (error) {
+    console.error('Error processing JSON data:', error);
+    alert('Failed to process JSON data.');
+  }
+};
+
+// High-level loadJson function using readJsonFile and processFlowData
+export const loadJson = async (setEdges, setNodes, setNodeIdCounter) => {
+  try {
+    const flowData = await readJsonFile();
+    if (flowData) {
+      processFlowData(flowData, setEdges, setNodes, setNodeIdCounter);
+    }
   } catch (error) {
     if (error.name !== 'AbortError') {
       console.error('Error loading JSON:', error);
