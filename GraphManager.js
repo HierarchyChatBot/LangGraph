@@ -1,4 +1,4 @@
-// GraphManagerContext.js
+// GraphManager.js
 import React, { createContext, useContext, useState } from 'react';
 import { useNodesState, useEdgesState} from 'reactflow';
 

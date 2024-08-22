@@ -4,15 +4,21 @@ import NodeData from './NodeData';
 import { createEdge } from './Edge';
 import { createConditionEdge } from './ConditionEdge';
 
-export const saveJson = async (nodes, nodeIdCounter) => {
+// Convert nodes to a JSON object format
+export const convertFlowToJson = (nodes, nodeIdCounter) => {
+  const nodesData = nodes.map((node) => NodeData.fromReactFlowNode(node));
+
+  const flowData = {
+    nodes: nodesData.map((node) => node.toDict()),
+    node_counter: nodeIdCounter,
+  };
+
+  return flowData;
+};
+
+// Save the JSON object to a file
+export const saveJsonToFile = async (flowData) => {
   try {
-    const nodesData = nodes.map((node) => NodeData.fromReactFlowNode(node));
-
-    const flowData = {
-      nodes: nodesData.map((node) => node.toDict()),
-      node_counter: nodeIdCounter,
-    };
-
     const blob = new Blob([JSON.stringify(flowData, null, 2)], { type: 'application/json' });
     const fileHandle = await window.showSaveFilePicker({
       suggestedName: 'flow.json',
@@ -36,6 +42,22 @@ export const saveJson = async (nodes, nodeIdCounter) => {
   }
 };
 
+// Original saveJson function - keeps the original interface
+export const saveJson = async (nodes, nodeIdCounter) => {
+  try {
+    // Convert nodes to JSON
+    const flowData = convertFlowToJson(nodes, nodeIdCounter);
+    // Save the JSON data to a file
+    await saveJsonToFile(flowData);
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      console.error('Error in saveJson:', error);
+      alert('Failed to save flow.');
+    }
+  }
+};
+
+// Read and process JSON file (unchanged)
 export const readJsonFile = async () => {
   try {
     const [fileHandle] = await window.showOpenFilePicker({
@@ -59,7 +81,7 @@ export const readJsonFile = async () => {
   }
 };
 
-// Function to process the JSON data and update the application state
+// Process flow data (unchanged)
 export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) => {
   try {
     const loadedNodes = (flowData.nodes || []).map((nodeData) => NodeData.fromDict(nodeData).toReactFlowNode());
@@ -100,7 +122,7 @@ export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) 
   }
 };
 
-// High-level loadJson function using readJsonFile and processFlowData
+// Load JSON file and process (unchanged)
 export const loadJson = async (setEdges, setNodes, setNodeIdCounter) => {
   try {
     const flowData = await readJsonFile();

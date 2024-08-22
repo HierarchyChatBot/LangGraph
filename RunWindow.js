@@ -2,10 +2,41 @@
 
 import React, { useState, useEffect } from 'react';
 import SERVER_URL from './config';
+import { useGraphManager } from './GraphManager';  // Import GraphManagerContext
+import { convertFlowToJson } from './JsonUtils';  // Import JsonUtils
 
 function RunWindow({ onClose }) {
   const [responseMessage, setResponseMessage] = useState('');
   const [running, setRunning] = useState(false);
+  
+  // Use GraphManagerContext to access nodes and nodeIdCounter
+  const { nodes, nodeIdCounter } = useGraphManager();
+
+  // Step 1: Save Graph Data to the Server before running the script
+  const saveGraphData = async () => {
+    try {
+      // Convert nodes and nodeIdCounter to a JSON object
+      const flowData = convertFlowToJson(nodes, nodeIdCounter);
+
+      // Transmit the JSON object to the server
+      const response = await fetch(`${SERVER_URL}/save-graph`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(flowData),  // Send the flow data to the server
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save graph data on the server.');
+      }
+
+      console.log('Graph data successfully saved to server.');
+      setResponseMessage(prev => prev + '\nGraph data successfully saved to server.');
+    } catch (error) {
+      console.error('Error saving graph data:', error);
+      setResponseMessage(prev => prev + '\nError saving graph data: ' + error.message);
+      throw error;  // Re-throw the error so that handleRun can handle it
+    }
+  };
 
   const handleRun = async () => {
     if (running) return;
@@ -13,6 +44,9 @@ function RunWindow({ onClose }) {
     setResponseMessage('');
 
     try {
+      // Step 1: Save graph data before running the script
+      await saveGraphData();  // Add the new save step
+
       console.log("Attempting to send request to Flask server...");
       const response = await fetch(`${SERVER_URL}/run`, {
         method: 'POST',
