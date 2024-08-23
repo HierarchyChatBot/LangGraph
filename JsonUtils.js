@@ -17,28 +17,21 @@ export const convertFlowToJson = (nodes, nodeIdCounter) => {
 };
 
 // Save the JSON object to a file
-export const saveJsonToFile = async (flowData) => {
+export const saveJsonToFile = (flowData) => {
   try {
     const blob = new Blob([JSON.stringify(flowData, null, 2)], { type: 'application/json' });
-    const fileHandle = await window.showSaveFilePicker({
-      suggestedName: 'flow.json',
-      types: [
-        {
-          description: 'JSON Files',
-          accept: { 'application/json': ['.json'] },
-        },
-      ],
-    });
-
-    const writable = await fileHandle.createWritable();
-    await writable.write(blob);
-    await writable.close();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'flow.json';
+    document.body.appendChild(a); // Append the link to the body
+    a.click(); // Simulate a click on the link
+    document.body.removeChild(a); // Remove the link from the body
+    URL.revokeObjectURL(url); // Revoke the object URL
     alert('Flow saved!');
   } catch (error) {
-    if (error.name !== 'AbortError') {
-      console.error('Error saving JSON:', error);
-      alert('Failed to save flow.');
-    }
+    console.error('Error saving JSON:', error);
+    alert('Failed to save flow.');
   }
 };
 
@@ -48,40 +41,36 @@ export const saveJson = async (nodes, nodeIdCounter) => {
     // Convert nodes to JSON
     const flowData = convertFlowToJson(nodes, nodeIdCounter);
     // Save the JSON data to a file
-    await saveJsonToFile(flowData);
+    saveJsonToFile(flowData);
   } catch (error) {
-    if (error.name !== 'AbortError') {
-      console.error('Error in saveJson:', error);
-      alert('Failed to save flow.');
-    }
+    console.error('Error in saveJson:', error);
+    alert('Failed to save flow.');
   }
 };
 
-// Read and process JSON file (unchanged)
-export const readJsonFile = async () => {
-  try {
-    const [fileHandle] = await window.showOpenFilePicker({
-      types: [
-        {
-          description: 'JSON Files',
-          accept: { 'application/json': ['.json'] },
-        },
-      ],
-      multiple: false,
-    });
-
-    const file = await fileHandle.getFile();
-    const contents = await file.text();
-    return JSON.parse(contents);
-  } catch (error) {
-    if (error.name !== 'AbortError') {
-      console.error('Error reading JSON file:', error);
-      alert('Failed to read JSON file.');
+// Read and process JSON file
+export const readJsonFile = (event) => {
+  return new Promise((resolve, reject) => {
+    const file = event.target.files[0];
+    if (!file) {
+      reject(new Error('No file selected.'));
+      return;
     }
-  }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const contents = e.target.result;
+        resolve(JSON.parse(contents));
+      } catch (error) {
+        reject(new Error('Error parsing JSON.'));
+      }
+    };
+    reader.onerror = () => reject(new Error('Error reading file.'));
+    reader.readAsText(file);
+  });
 };
 
-// Process flow data (unchanged)
+// Process flow data
 export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) => {
   try {
     const loadedNodes = (flowData.nodes || []).map((nodeData) => NodeData.fromDict(nodeData).toReactFlowNode());
@@ -122,17 +111,27 @@ export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) 
   }
 };
 
-// Load JSON file and process (unchanged)
-export const loadJson = async (setEdges, setNodes, setNodeIdCounter) => {
-  try {
-    const flowData = await readJsonFile();
-    if (flowData) {
-      processFlowData(flowData, setEdges, setNodes, setNodeIdCounter);
-    }
-  } catch (error) {
-    if (error.name !== 'AbortError') {
+// Load JSON file and process
+export const loadJson = (setEdges, setNodes, setNodeIdCounter) => {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.json';
+  fileInput.style.display = 'none';
+  document.body.appendChild(fileInput);
+
+  fileInput.addEventListener('change', async (event) => {
+    try {
+      const flowData = await readJsonFile(event);
+      if (flowData) {
+        processFlowData(flowData, setEdges, setNodes, setNodeIdCounter);
+      }
+    } catch (error) {
       console.error('Error loading JSON:', error);
       alert('Failed to load flow.');
+    } finally {
+      document.body.removeChild(fileInput); // Clean up
     }
-  }
+  });
+
+  fileInput.click();
 };
