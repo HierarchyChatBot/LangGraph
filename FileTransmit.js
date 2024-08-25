@@ -36,7 +36,6 @@ function FileTransmit({ onUploadComplete }) {
       } catch (error) {
         alert('Upload failed: ' + error.message);
       } finally {
-        // Clear the input value to allow the same files to be selected again if needed
         event.target.value = null;
       }
     }
@@ -63,6 +62,24 @@ function FileTransmit({ onUploadComplete }) {
     }
   };
 
+  // New function to handle cache cleanup
+  const handleCleanCacheClick = async () => {
+    try {
+      const response = await fetch(`${SERVER_URL}/clean-cache`, {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        alert('Cache successfully cleaned');
+      } else {
+        const errorData = await response.json();
+        alert('Clean cache failed: ' + errorData.error);
+      }
+    } catch (error) {
+      alert('Clean cache failed: ' + error.message);
+    }
+  };
+
   return (
     <div style={{ display: 'flex', gap: '10px' }}>
       <input
@@ -74,6 +91,7 @@ function FileTransmit({ onUploadComplete }) {
       />
       <button onClick={handleUploadClick}>Files To Cache</button>
       <button onClick={handleDownloadClick}>Get from Cache</button>
+      <button onClick={handleCleanCacheClick}>Clean Cache</button> {/* New Clean Cache Button */}
     </div>
   );
 }
