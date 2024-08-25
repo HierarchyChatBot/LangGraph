@@ -1,7 +1,7 @@
 // FileTransmit.js
 
 import React, { useRef } from 'react';
-import SERVER_URL from './config';
+import SERVER_URL from '../config';
 
 function FileTransmit({ onUploadComplete }) {
   const fileInputRef = useRef();

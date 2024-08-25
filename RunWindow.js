@@ -1,7 +1,7 @@
 // RunWindow.js
 
 import React, { useState, useEffect } from 'react';
-import SERVER_URL from './config';
+import SERVER_URL from '../config';
 import { useGraphManager } from './GraphManager';  // Import GraphManagerContext
 import { convertFlowToJson } from './JsonUtils';  // Import JsonUtils
 
