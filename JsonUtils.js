@@ -6,7 +6,19 @@ import { createConditionEdge } from './ConditionEdge';
 
 // Convert nodes to a JSON object format
 export const convertFlowToJson = (nodes, nodeIdCounter) => {
-  const nodesData = nodes.map((node) => NodeData.fromReactFlowNode(node));
+  const nodesData = nodes.map((node) => {
+    // Create a unique set from nexts, then convert it back to an array
+    const uniqueNexts = Array.from(new Set(node.data.nexts || []));
+    
+    // Return a new node with the updated unique 'nexts' array
+    return NodeData.fromReactFlowNode({
+      ...node,
+      data: {
+        ...node.data,
+        nexts: uniqueNexts,
+      },
+    });
+  });
 
   const flowData = {
     nodes: nodesData.map((node) => node.toDict()),
