@@ -4,11 +4,15 @@ import React, { useState, useEffect } from 'react';
 import SERVER_URL from '../config';
 import { useGraphManager } from './GraphManager';  // Import GraphManagerContext
 import { convertFlowToJson } from './JsonUtils';  // Import JsonUtils
+import ConfigManager from '../ConfigManager';  // Import ConfigManager to handle settings
 
 function RunWindow({ onClose }) {
   const [responseMessage, setResponseMessage] = useState('');
   const [running, setRunning] = useState(false);
   
+  // Load the llmModel and openAiKey from ConfigManager
+  const { llmModel, openAiKey } = ConfigManager.getSettings();
+
   // Use GraphManagerContext to access nodes and nodeIdCounter
   const { nodes, nodeIdCounter } = useGraphManager();
 
@@ -50,6 +54,11 @@ function RunWindow({ onClose }) {
       console.log("Attempting to send request to Flask server...");
       const response = await fetch(`${SERVER_URL}/run`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          llm_model: llmModel,  // Send the LLM model dynamically
+          open_ai_key: openAiKey,  // Send the OpenAI key dynamically
+        }),
       });
 
       if (!response.body) {

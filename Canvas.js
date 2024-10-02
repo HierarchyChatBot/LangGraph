@@ -8,7 +8,7 @@ import { createEdge, deleteEdge } from './Edge';
 import { createConditionEdge, deleteConditionEdge } from './ConditionEdge';
 import { saveJson, loadJson } from './JsonUtils';
 import { useGraphManager } from './GraphManager';
-import ConfigWindow from './ConfigWindow';
+import ConfigWindow from '../ConfigWindow';
 import RunWindow from './RunWindow';
 import FileTransmit from './FileTransmit';
 
@@ -172,6 +172,7 @@ function Canvas() {
         <button onClick={handleSave}>Save Graph</button>
         <button onClick={handleLoad}>Load Graph</button>
         <button onClick={handleRun}>Run Graph</button>
+        <button onClick={handleConfig}>Config</button>
         <FileTransmit onUploadComplete={handleUploadComplete} />
       </nav>
       <div style={{ height: `${canvasHeight}px`, width: '100%' }}>

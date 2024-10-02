@@ -86,6 +86,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
             <option value="STEP">STEP</option>
             <option value="TOOL">TOOL</option>
             <option value="CONDITION">CONDITION</option>
+            <option value="QUESTION">QUESTION</option>
           </select>
         </div>
         {data.type !== 'START' && (
@@ -116,7 +117,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
                 />
               </div>
             )}
-            {['STEP', 'TOOL', 'CONDITION'].includes(data.type) && (
+            {['STEP', 'TOOL', 'CONDITION', 'QUESTION'].includes(data.type) && (
               <div style={{ flex: 1 }}>
                 <label htmlFor="description" style={{ display: 'block', fontSize: '12px' }}>Description:</label>
                 <textarea
