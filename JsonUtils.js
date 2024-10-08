@@ -22,6 +22,7 @@ export const convertFlowToJson = (nodes, nodeIdCounter) => {
         pos_y: node.position.y,
         width: node.width || node.data.width || 200,
         height: node.height || node.data.height || 200,
+        info: node.data.info || '',  // Add info from node data
       },
     });
   });

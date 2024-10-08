@@ -96,8 +96,17 @@ function Node({ data, isConnectable, id, prevs }) {
   }, [id, setNodes]);
 
   const onChangeType = useCallback((evt) => {
-    updateNodeData((prevData) => ({ ...prevData, type: evt.target.value }));
-  }, [id, setNodes]);
+    const newType = evt.target.value;
+    updateNodeData((prevData) => ({ ...prevData, type: newType }));
+
+    // If changing to INFO, ensure ext is defined
+    if (newType === 'INFO' && !nodeData.ext) {
+      updateNodeData((prevData) => ({
+        ...prevData,
+        ext: { info: '' }  // Initialize ext.info if it doesn't exist
+      }));
+    }
+  }, [id, setNodes, nodeData]);
 
   const onChangeTool = useCallback((tool) => {
     updateNodeData((prevData) => ({ ...prevData, tool }));
@@ -105,6 +114,14 @@ function Node({ data, isConnectable, id, prevs }) {
 
   const onResize = useCallback((width, height) => {
     updateNodeData((prevData) => ({ ...prevData, width, height }));
+  }, [id, setNodes]);
+
+  // New onChangeInfo function
+  const onChangeInfo = useCallback((evt) => {
+    updateNodeData((prevData) => ({
+      ...prevData,
+      ext: { ...prevData.ext, info: evt.target.value } // Update ext.info
+    }));
   }, [id, setNodes]);
 
   return (
@@ -116,6 +133,7 @@ function Node({ data, isConnectable, id, prevs }) {
       onChangeType={onChangeType}
       onChangeTool={onChangeTool}
       onResize={onResize}
+      onChangeInfo={onChangeInfo} // Pass the new handler
       prevs={prevs}
     />
   );
@@ -125,7 +143,17 @@ export const addNode = (nodes, setNodes, nodeIdCounter, setNodeIdCounter, newPos
   const newNode = {
     id: nodeIdCounter.toString(),
     type: 'textUpdater',
-    data: { name: `Node ${nodeIdCounter}`, description: '', type: 'STEP', nexts: [], true_next: null, false_next: null, width: 200, height: 200 },
+    data: { 
+      name: `Node ${nodeIdCounter}`, 
+      description: '', 
+      type: 'STEP', 
+      ext: { info: '' }, // Initialize ext.info for new nodes
+      nexts: [], 
+      true_next: null, 
+      false_next: null, 
+      width: 200, 
+      height: 200 
+    },
     position: newPosition,
     prevs: []
   };

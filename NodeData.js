@@ -20,6 +20,7 @@ class NodeData {
     this.pos_y = ext.pos_y || 0;
     this.width = ext.width || 200;
     this.height = ext.height || 200;
+    this.info = ext.info || '';
 
     this.nexts = nexts;
     this.type = type;
@@ -38,6 +39,7 @@ class NodeData {
         pos_y: node.position.y,
         width: node.width || node.data.width || 200,
         height: node.height || node.data.height || 200,
+        info: node.data.info || '',
       },
       nexts: node.data.nexts || [],
       type: node.data.type || 'STEP',
@@ -65,9 +67,10 @@ class NodeData {
         tool: this.tool,
         true_next: this.true_next,
         false_next: this.false_next,
-        // Extract width and height from ext
+
         width: this.ext.width,
         height: this.ext.height,
+        info: this.ext.info,
       },
       position: { x: this.ext.pos_x, y: this.ext.pos_y },
     };
@@ -86,6 +89,7 @@ class NodeData {
         pos_y: this.ext.pos_y,
         width: this.ext.width,
         height: this.ext.height,
+        info: this.ext.info,
       },
       nexts,
       type,

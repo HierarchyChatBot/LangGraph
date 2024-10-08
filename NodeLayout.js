@@ -11,7 +11,7 @@ const handleStyle = {
   background: '#555',
 };
 
-function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, onChangeType, onResize, onChangeTool }) {
+function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, onChangeType, onResize, onChangeTool, onChangeInfo }) {
   const handleTypeChange = useCallback((evt) => {
     const newType = evt.target.value;
     onChangeType(evt);
@@ -86,7 +86,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
             <option value="STEP">STEP</option>
             <option value="TOOL">TOOL</option>
             <option value="CONDITION">CONDITION</option>
-            <option value="QUESTION">QUESTION</option>
+            <option value="INFO">INFO</option>
           </select>
         </div>
         {data.type !== 'START' && (
@@ -111,30 +111,41 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
                   id="tool"
                   name="tool"
                   value={data.tool}
-                  onChange={(evt) => onChangeTool(evt.target.value)}
+                  onChange={(e) => onChangeTool(e.target.value)}
                   className="nodrag"
                   style={{ width: 'calc(100% - 20px)' }}
                 />
               </div>
             )}
-            {['STEP', 'TOOL', 'CONDITION', 'QUESTION'].includes(data.type) && (
-              <div style={{ flex: 1 }}>
-                <label htmlFor="description" style={{ display: 'block', fontSize: '12px' }}>Description:</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={data.description}
-                  onChange={onChangeDescription}
+            {data.type === 'INFO' && (
+              <div>
+                <label htmlFor="info" style={{ display: 'block', fontSize: '12px' }}>Info:</label>
+                <input
+                  id="info"
+                  name="info"
+                  value={data.ext?.info || ''} // Use optional chaining
+                  onChange={onChangeInfo} // Call the new handler
                   className="nodrag"
-                  style={{ width: 'calc(100% - 20px)', height: 'calc(100% - 30px)', resize: 'none' }}
+                  style={{ width: 'calc(100% - 20px)' }}
                 />
               </div>
             )}
           </>
         )}
+        <div>
+          <label htmlFor="description" style={{ display: 'block', fontSize: '12px' }}>Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            value={data.description}
+            onChange={onChangeDescription}
+            className="nodrag"
+            style={{ width: 'calc(100% - 20px)', resize: 'none' }}
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-export default React.memo(NodeLayout);
+export default NodeLayout;
