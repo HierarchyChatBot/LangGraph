@@ -10,12 +10,18 @@ export const convertFlowToJson = (nodes, nodeIdCounter) => {
     // Create a unique set from nexts, then convert it back to an array
     const uniqueNexts = Array.from(new Set(node.data.nexts || []));
     
-    // Return a new node with the updated unique 'nexts' array
+    // Return a new node with the updated unique 'nexts' array and ext object
     return NodeData.fromReactFlowNode({
       ...node,
       data: {
         ...node.data,
         nexts: uniqueNexts,
+      },
+      ext: {
+        pos_x: node.position.x,
+        pos_y: node.position.y,
+        width: node.width || node.data.width || 200,
+        height: node.height || node.data.height || 200,
       },
     });
   });
@@ -85,7 +91,14 @@ export const readJsonFile = (event) => {
 // Process flow data
 export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) => {
   try {
-    const loadedNodes = (flowData.nodes || []).map((nodeData) => NodeData.fromDict(nodeData).toReactFlowNode());
+    const loadedNodes = (flowData.nodes || []).map((nodeData) => {
+      const node = NodeData.fromDict(nodeData);
+      // Create a new object that includes ext properties
+      return {
+        ...node.toReactFlowNode(),
+        position: { x: node.ext.pos_x, y: node.ext.pos_y }, // Use ext for position
+      };
+    });
 
     // First, set the nodes
     setNodes(loadedNodes);
