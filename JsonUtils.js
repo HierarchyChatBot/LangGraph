@@ -22,7 +22,7 @@ export const convertFlowToJson = (nodes, nodeIdCounter) => {
         pos_y: node.position.y,
         width: node.width || node.data.width || 200,
         height: node.height || node.data.height || 200,
-        info: node.data.info || '',  // Add info from node data
+        info: node.data.info || '',
       },
     });
   });
@@ -97,7 +97,7 @@ export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) 
       // Create a new object that includes ext properties
       return {
         ...node.toReactFlowNode(),
-        position: { x: node.ext.pos_x, y: node.ext.pos_y }, // Use ext for position
+        position: { x: node.ext.pos_x, y: node.ext.pos_y },
       };
     });
 

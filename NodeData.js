@@ -70,7 +70,7 @@ class NodeData {
 
         width: this.ext.width,
         height: this.ext.height,
-        info: this.ext.info,
+        info: this.ext.info,  // Add this line to transfer the info field
       },
       position: { x: this.ext.pos_x, y: this.ext.pos_y },
     };

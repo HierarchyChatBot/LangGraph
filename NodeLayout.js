@@ -123,7 +123,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
                 <input
                   id="info"
                   name="info"
-                  value={data.ext?.info || ''} // Use optional chaining
+                  value={data.info} // Use optional chaining
                   onChange={onChangeInfo} // Call the new handler
                   className="nodrag"
                   style={{ width: 'calc(100% - 20px)' }}

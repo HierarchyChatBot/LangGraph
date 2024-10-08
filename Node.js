@@ -98,15 +98,7 @@ function Node({ data, isConnectable, id, prevs }) {
   const onChangeType = useCallback((evt) => {
     const newType = evt.target.value;
     updateNodeData((prevData) => ({ ...prevData, type: newType }));
-
-    // If changing to INFO, ensure ext is defined
-    if (newType === 'INFO' && !nodeData.ext) {
-      updateNodeData((prevData) => ({
-        ...prevData,
-        ext: { info: '' }  // Initialize ext.info if it doesn't exist
-      }));
-    }
-  }, [id, setNodes, nodeData]);
+  }, [id, setNodes]);
 
   const onChangeTool = useCallback((tool) => {
     updateNodeData((prevData) => ({ ...prevData, tool }));
@@ -116,12 +108,8 @@ function Node({ data, isConnectable, id, prevs }) {
     updateNodeData((prevData) => ({ ...prevData, width, height }));
   }, [id, setNodes]);
 
-  // New onChangeInfo function
   const onChangeInfo = useCallback((evt) => {
-    updateNodeData((prevData) => ({
-      ...prevData,
-      ext: { ...prevData.ext, info: evt.target.value } // Update ext.info
-    }));
+    updateNodeData((prevData) => ({...prevData, info: evt.target.value }));
   }, [id, setNodes]);
 
   return (
