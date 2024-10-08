@@ -1,6 +1,6 @@
 // NodeLayout.js
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Handle, Position, NodeResizeControl } from 'reactflow';
 import ResizeIcon from './ResizeIcon';
 
@@ -12,6 +12,8 @@ const handleStyle = {
 };
 
 function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, onChangeType, onResize, onChangeTool, onChangeInfo }) {
+  const containerRef = useRef(null);
+
   const handleTypeChange = useCallback((evt) => {
     const newType = evt.target.value;
     onChangeType(evt);
@@ -25,15 +27,18 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
 
   return (
     <div 
+      ref={containerRef}
       style={{ 
         border: '1px solid #898989', // Darker boundary color
-        padding: '5px', 
+        padding: '5px',
         borderRadius: '15px', // More rounded corners
         background: 'white',
         width: data.width || 200,
         height: data.height || 200,
         overflow: 'visible', // Ensure overflow is visible
-        position: 'relative'
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <NodeResizeControl 
@@ -71,7 +76,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
         style={{ ...handleStyle, bottom: '-5px', left: 'calc(50% - 5px)', background: 'red' }}
         isConnectable={isConnectable}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', flexGrow: 1 }}>
         <div>
           <label htmlFor="type" style={{ display: 'block', fontSize: '12px' }}>Type:</label>
           <select
@@ -123,16 +128,16 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
                 <input
                   id="info"
                   name="info"
-                  value={data.info} // Use optional chaining
-                  onChange={onChangeInfo} // Call the new handler
+                  value={data.info}
+                  onChange={onChangeInfo}
                   className="nodrag"
-                  style={{ width: 'calc(100% - 20px)' }}
+                  style={{ width: 'calc(100% - 20px)', height: '30px' }}
                 />
               </div>
             )}
           </>
         )}
-        <div>
+        <div style={{ flexGrow: 1 }}> {/* Allow this div to take available height */}
           <label htmlFor="description" style={{ display: 'block', fontSize: '12px' }}>Description:</label>
           <textarea
             id="description"
@@ -140,7 +145,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
             value={data.description}
             onChange={onChangeDescription}
             className="nodrag"
-            style={{ width: 'calc(100% - 20px)', resize: 'none' }}
+            style={{ width: 'calc(100% - 20px)', height: 'calc(100% - 40px)', resize: 'none' }}
           />
         </div>
       </div>
