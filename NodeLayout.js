@@ -124,7 +124,7 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
             )}
             {data.type === 'INFO' && (
               <div>
-                <label htmlFor="info" style={{ display: 'block', fontSize: '12px' }}>Info:</label>
+                <label htmlFor="info" style={{ display: 'block', fontSize: '12px' }}>Question:</label>
                 <input
                   id="info"
                   name="info"
