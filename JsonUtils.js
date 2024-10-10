@@ -10,25 +10,31 @@ export const convertFlowToJson = (nodes, nodeIdCounter) => {
     // Create a unique set from nexts, then convert it back to an array
     const uniqueNexts = Array.from(new Set(node.data.nexts || []));
     
-    // Return a new node with the updated unique 'nexts' array and ext object
-    return NodeData.fromReactFlowNode({
+    const ext = {
+      pos_x: node.position.x,
+      pos_y: node.position.y,
+      width: node.data.width || 200,
+      height: node.data.height || 200,
+      info: node.data.info || '',
+    };
+
+    // Return a new node with the updated unique 'nexts' array
+    const nodeData = NodeData.fromReactFlowNode({
       ...node,
       data: {
         ...node.data,
         nexts: uniqueNexts,
       },
-      ext: {
-        pos_x: node.position.x,
-        pos_y: node.position.y,
-        width: node.width || node.data.width || 200,
-        height: node.height || node.data.height || 200,
-        info: node.data.info || '',
-      },
     });
+
+    return {
+      ...nodeData.toDict(),
+      ext,
+    };
   });
 
   const flowData = {
-    nodes: nodesData.map((node) => node.toDict()),
+    nodes: nodesData,
     node_counter: nodeIdCounter,
   };
 
@@ -94,10 +100,16 @@ export const processFlowData = (flowData, setEdges, setNodes, setNodeIdCounter) 
   try {
     const loadedNodes = (flowData.nodes || []).map((nodeData) => {
       const node = NodeData.fromDict(nodeData);
-      // Create a new object that includes ext properties
+      // Create a new object that includes ext properties and updated width/height
       return {
         ...node.toReactFlowNode(),
-        position: { x: node.ext.pos_x, y: node.ext.pos_y },
+        position: { x: nodeData.ext.pos_x, y: nodeData.ext.pos_y },
+        data: {
+          ...node.toReactFlowNode().data,
+          width: nodeData.ext.width,
+          height: nodeData.ext.height,
+        },
+        info: nodeData.ext.info, // Ensure info is also set
       };
     });
 
