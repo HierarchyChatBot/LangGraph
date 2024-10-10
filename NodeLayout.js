@@ -96,12 +96,12 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
         </div>
         {data.type !== 'START' && (
           <>
-            {['STEP', 'CONDITION'].includes(data.type) && (
+            {['STEP', 'CONDITION', 'INFO'].includes(data.type) && (
               <div>
-                <label htmlFor="text" style={{ display: 'block', fontSize: '12px' }}>Name:</label>
+                <label htmlFor="name" style={{ display: 'block', fontSize: '12px' }}>Name:</label>
                 <input
-                  id="text"
-                  name="text"
+                  id="name"
+                  name="name"
                   value={data.name}
                   onChange={onChangeName}
                   className="nodrag"
