@@ -138,15 +138,19 @@ function NodeLayout({ data, isConnectable, onChangeName, onChangeDescription, on
           </>
         )}
         <div style={{ flexGrow: 1 }}> {/* Allow this div to take available height */}
-          <label htmlFor="description" style={{ display: 'block', fontSize: '12px' }}>Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={data.description}
-            onChange={onChangeDescription}
-            className="nodrag"
-            style={{ width: 'calc(100% - 20px)', height: 'calc(100% - 40px)', resize: 'none' }}
-          />
+          {['START'].indexOf(data.type) === -1 && ( // Only show description if data.type is not 'START'
+            <>
+              <label htmlFor="description" style={{ display: 'block', fontSize: '12px' }}>Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                value={data.description}
+                onChange={onChangeDescription}
+                className="nodrag"
+                style={{ width: 'calc(100% - 20px)', height: 'calc(100% - 40px)', resize: 'none' }}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
